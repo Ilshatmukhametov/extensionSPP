@@ -40,7 +40,7 @@ const fetched = (port, msg) => {
     if (soldOutCon !== null) {
       renderWidget(soldOutCon, msg)
     } else {
-      return
+      return true
     }
   } else {
     renderWidget(head, msg)
