@@ -11,6 +11,7 @@ chrome.webNavigation.onCompleted.addListener(  function (e) {
 });
 
 const connect = (listEvent) => {
+  console.log('asdasda')
   const listEventPathname = new URL(listEvent.url).pathname
 
   if (listEventPathname !== url_cache) {

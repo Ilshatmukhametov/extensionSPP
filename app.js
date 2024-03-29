@@ -23,9 +23,8 @@ chrome.runtime.onConnect.addListener(function(port) {
   })
 })
 const scrapy_main = (port, msg) => {
-  const head = document.getElementsByClassName('product-page__aside-sticky')
-
-  if (head[0] == null) {
+  const head = document.getElementById('mainContainer')
+  if (head == null) {
     port.postMessage('error')
     setTimeout(() => scrapy_main(port),100)
   } else {
