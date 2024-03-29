@@ -2,7 +2,7 @@ const operation__scrapy_main = 'scrapy_main'
 let url_cache
 
 
-chrome.webNavigation.onCompleted.addListener(  function (e) {
+chrome.webNavigation.onDOMContentLoaded.addListener(  function () {
   url_cache = ''
 }, {
   url: [
@@ -11,11 +11,9 @@ chrome.webNavigation.onCompleted.addListener(  function (e) {
 });
 
 const connect = (listEvent) => {
-  console.log('asdasda')
   const listEventPathname = new URL(listEvent.url).pathname
 
   if (listEventPathname !== url_cache) {
-    console.log(listEventPathname)
     let port = chrome.tabs.connect(listEvent.tabId)
     port.postMessage({ name: operation__scrapy_main })
     port.onMessage.addListener(function (msg) {
