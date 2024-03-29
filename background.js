@@ -2,7 +2,7 @@ const operation__scrapy_main = 'scrapy_main'
 let url_cache
 
 
-chrome.webNavigation.onDOMContentLoaded.addListener(  function () {
+chrome.webNavigation.onDOMContentLoaded.addListener(  function (e) {
   url_cache = ''
 }, {
   url: [

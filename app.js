@@ -1,4 +1,3 @@
-const parent_container_css = 'display: flex; width: 100%; flex-direction: column; gap: 8px;margin-top: 12px'
 const flex_row_gap = 'display: flex; flex-direction: row; gap: 4px;'
 const flex_column_gap = 'display: flex; flex-direction: column; gap: 4px;'
 const percents_container_css = 'padding: 4px 16px 4px 16px; background-color: #7986CB; color: white; border-radius: 8px; height: 25px; width: max-content;display:flex;align-items:center;min-width: 65px;'
@@ -75,14 +74,6 @@ const renderWidget = (head, msg) => {
 
         const normalSpanSeller = document.createElement('span')
         const boldSpanSeller = document.createElement('span')
-
-        flexRow.style.cssText = flex_row_gap
-        sppContainer.style.cssText = spp_percent_css
-        sellerContainer.style.cssText = seller_price_css
-        normalSpanSpp.style.cssText = normal_span_css
-        boldSpanSpp.style.cssText = bold_span_css
-        normalSpanSeller.style.cssText = normal_span_css
-        boldSpanSeller.style.cssText = bold_span_css
 
         normalSpanSeller.textContent = 'Цена продавца'
         boldSpanSeller.textContent = `${ sellerPrice } ₽`

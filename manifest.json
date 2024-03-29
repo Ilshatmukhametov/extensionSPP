@@ -10,7 +10,8 @@
     "content_scripts": [
         {
             "matches": ["http://*/*", "https://*/*"],
-            "js": ["app.js"]
+            "js": ["app.js"],
+            "css": ["sppWidget.css"]
         }
     ],
     "permissions": [
