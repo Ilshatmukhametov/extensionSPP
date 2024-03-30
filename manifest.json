@@ -11,7 +11,7 @@
         {
             "matches": ["http://*/*", "https://*/*"],
             "js": ["app.js"],
-            "css": ["sppWidget.css"]
+            "css": ["styles.css"]
         }
     ],
     "permissions": [
