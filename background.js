@@ -32,9 +32,12 @@ const fetchingSpp = async (url, port) => {
 
   if (!isNaN(nmid)) {
     try {
-      const response = await fetch('http://37.230.113.58:9003/spp?' + new URLSearchParams({ nmid })).
-      then(res => res.json());
+      const request = await fetch('http://37.230.113.58:9003/spp?' + new URLSearchParams({ nmid }))
+      const response = await request.json()
+      const currentNmid = url_cache.split('/')[2]
+      if (currentNmid == nmid) {
       port.postMessage({ name: 'fetched', response })
+        }
     } catch (error) {
       console.error(error);
     }
@@ -49,7 +52,7 @@ const connectionHandler = (listEvent) => {
 
   port.onMessage.addListener(function (msg) {
     console.log(msg)
-    if (msg === 'found') {
+    if (msg === 'start_fetching') {
       fetchingSpp(listEvent.url, port)
     }
   })

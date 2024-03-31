@@ -5,43 +5,80 @@ chrome.runtime.onConnect.addListener(function(port) {
       case 'scrapy_main':
         scrapy_main(port, msg)
         break
-      case 'fetched':
-        fetched(port, msg)
+      case 'fetched': {
+        fetched(port, msg, 0)
+        break
+      }
     }
   })
 })
 const scrapy_main = (port) => {
-  const head = document.getElementById('mainContainer')
-  if (head == null) {
-    port.postMessage('error')
-    setTimeout(() => scrapy_main(port),100)
-  } else {
-    port.postMessage('found')
-  }
-}
-
-const fetched = (port, msg) => {
   const head = document.getElementsByClassName('price-block__content')
   const soldOutCon = document.getElementsByClassName('sold-out-product')
-  if (head[0] == null) {
-    if (soldOutCon !== null) {
-      renderWidget(soldOutCon, msg)
-    } else {
-      return true
-    }
+  if (head[0] !== null) {
+    port.postMessage('start_fetching')
+    isLoadingFunc(0, port)
   } else {
-    renderWidget(head, msg)
+    port.postMessage('error')
+    setTimeout(() => scrapy_main(port),100)
   }
 }
 
-const renderWidget = (head, msg) => {
-  const existedComponent = document.getElementsByClassName('sppWidget')
 
-  if (existedComponent[0] !== null) {
-    Object.keys(existedComponent).forEach(el => {
-      existedComponent[el].remove()
+const isLoadingFunc = (attempts,port) => {
+  const head = document.getElementsByClassName('price-block__content')
+  const soldOutCon = document.getElementsByClassName('sold-out-product')
+
+  if (attempts < 5) {
+    if (head[0] == null) {
+      setTimeout(() => isLoadingFunc(attempts + 1, port), 200)
+    } else {
+      sceletonComponentRender(head)
+    }
+  } else {
+    if (soldOutCon[0] == null) {
+      return false
+    } else {
+      sceletonComponentRender(soldOutCon)
+    }
+  }
+}
+
+const fetched = (port, msg, attempts) => {
+  const head = document.getElementsByClassName('price-block__content')
+  const soldOutCon = document.getElementsByClassName('sold-out-product')
+
+  if (attempts < 5) {
+    port.postMessage(attempts)
+    if (head[0] == null) {
+      port.postMessage('Не найдены компоненты, ищу заново')
+      setTimeout(() => fetched(port, msg, attempts + 1), 200)
+    } else {
+      renderWidget(head, msg, port)
+    }
+  } else {
+    if (soldOutCon[0] == null) {
+      port.postMessage('errors')
+    } else {
+      renderWidget(soldOutCon, msg, port)
+    }
+  }
+}
+const renderWidget = (head, msg, port) => {
+  const existingSceleton = document.getElementsByClassName('sppSceleton')
+  const existingComponent = document.getElementsByClassName('sppWidget')
+
+  if (existingSceleton[0] !== null) {
+    Object.keys(existingSceleton).forEach(el => {
+      existingSceleton[el].style.cssText = 'display: none;'
     })
   }
+  if (existingComponent[0] !== null) {
+    Object.keys(existingComponent).forEach(el => {
+      existingComponent[el].remove()
+    })
+  }
+
   Object.keys(head).forEach(el => {
     const adjacentHTML =
       `<div class="sppWidget">
@@ -50,6 +87,12 @@ const renderWidget = (head, msg) => {
       </div>`
 
     head[el].insertAdjacentHTML('beforebegin', adjacentHTML)
+    //
+    // if (sceleton[0] !== null) {
+    //   Object.keys(sceleton).forEach(el => {
+    //     sceleton[el].style.cssText = 'display: none;'
+    //   })
+    // }
   })
 }
 
@@ -101,4 +144,34 @@ const minMaxComponentRender = (ranges) => {
     innerHtml = '</>'
   }
   return innerHtml
+}
+
+const sceletonComponentRender = (head) => {
+
+  Object.keys(head).forEach(el => {
+    const adjacentHTML =
+      '<div class="sppSceleton">' +
+        '<div class="flexRow">' +
+          '<div class="pulsate1"></div>' +
+          '<div class="pulsate2"></div>' +
+        '</div>' +
+        '<div class="pulsate3"></div>' +
+        '<div class="flexRow">' +
+          '<div class="pulsate4"></div>' +
+          '<div class="pulsate5"></div>' +
+        '</div>' +
+        '<div class="flexRow">' +
+          '<div class="pulsate6"></div>' +
+          '<div class="pulsate7"></div>' +
+        '</div>' +
+      '</div>'
+
+    head[el].insertAdjacentHTML('beforebegin', adjacentHTML)
+    //
+    // if (sceleton[0] !== null) {
+    //   Object.keys(sceleton).forEach(el => {
+    //     sceleton[el].style.cssText = 'display: none;'
+    //   })
+    // }
+  })
 }
