@@ -125,6 +125,7 @@
     }
     .pulsate1 {
         width: 20%;
+        min-width: 65px;
         height: 48px;
     }
 
@@ -137,6 +138,7 @@
     }
     .pulsate4 {
         width: 20%;
+        min-width: 65px;
         height: 23px;
     }
     .pulsate5 {
@@ -145,6 +147,7 @@
     }
     .pulsate6 {
         width: 20%;
+        min-width: 65px;
         height: 23px;
     }
     .pulsate7 {

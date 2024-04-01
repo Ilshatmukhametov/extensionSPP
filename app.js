@@ -86,7 +86,7 @@ const renderWidget = (head, msg, port) => {
             ${minMaxComponentRender(msg.response.ranges)}
       </div>`
 
-    head[el].insertAdjacentHTML('beforebegin', adjacentHTML)
+    head[el].insertAdjacentHTML('beforeend', adjacentHTML)
     //
     // if (sceleton[0] !== null) {
     //   Object.keys(sceleton).forEach(el => {
@@ -166,7 +166,7 @@ const sceletonComponentRender = (head) => {
         '</div>' +
       '</div>'
 
-    head[el].insertAdjacentHTML('beforebegin', adjacentHTML)
+    head[el].insertAdjacentHTML('beforeend', adjacentHTML)
     //
     // if (sceleton[0] !== null) {
     //   Object.keys(sceleton).forEach(el => {
