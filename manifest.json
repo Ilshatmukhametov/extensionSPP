@@ -15,13 +15,6 @@
         }
     ],
     "permissions": [
-        "activeTab",
-        "background",
-        "debugger",
-        "scripting",
-        "activeTab",
-        "webNavigation",
-        "webRequest",
-        "tabs"
+        "webNavigation"
     ]
 }
