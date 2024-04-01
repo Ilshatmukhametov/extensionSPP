@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": " не e-com - spp",
+    "name": "Wberryprice",
     "version": "1.0.1",
     "background": {
         "service_worker": "background.js",

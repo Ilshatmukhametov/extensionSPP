@@ -51,7 +51,6 @@ const connectionHandler = (listEvent) => {
   port.postMessage({ name: operation__scrapy_main })
 
   port.onMessage.addListener(function (msg) {
-    console.log(msg)
     if (msg === 'start_fetching') {
       fetchingSpp(listEvent.url, port)
     }
