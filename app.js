@@ -14,7 +14,7 @@ chrome.runtime.onConnect.addListener(function(port) {
 })
 const scrapy_main = (port) => {
   const head = document.getElementsByClassName('price-block__content')
-  const soldOutCon = document.getElementsByClassName('sold-out-product')
+
   if (head[0] !== null) {
     port.postMessage('start_fetching')
     isLoadingFunc(0, port)
@@ -28,6 +28,12 @@ const scrapy_main = (port) => {
 const isLoadingFunc = (attempts,port) => {
   const head = document.getElementsByClassName('price-block__content')
   const soldOutCon = document.getElementsByClassName('sold-out-product')
+  const priceBlockAside = document.getElementsByClassName('product-page__price-block--aside')
+
+
+  Object.keys(priceBlockAside).forEach(el => {
+    priceBlockAside[el].style.cssText = 'max-width: 100%;'
+  })
 
   if (attempts < 5) {
     if (head[0] == null) {
