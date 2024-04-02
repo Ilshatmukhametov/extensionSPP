@@ -6,10 +6,9 @@
         "service_worker": "background.js",
         "type": "module"
       },
-    "host_permissions": ["http://*/*", "https://*/*"],
     "content_scripts": [
         {
-            "matches": ["http://*/*", "https://*/*"],
+            "matches": ["<all_urls>"],
             "js": ["app.js"],
             "css": ["styles.css"]
         }
