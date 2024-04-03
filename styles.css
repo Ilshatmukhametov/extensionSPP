@@ -96,6 +96,16 @@
     }
 }
 
+.sppExtensionWidget {
+    margin-bottom: 20px;
+    img {
+        border-radius: 16px;
+        width: 100%;
+        max-width: 340px;
+        box-shadow: 0 2px 16px 0 #00000014;
+    }
+}
+
 .sppSceleton {
     width: 100%;
     display: flex;

@@ -1,7 +1,6 @@
 const operation__scrapy_main = 'scrapy_main'
 let url_cache
 
-
 chrome.webNavigation.onDOMContentLoaded.addListener(  function () {
   url_cache = ''
 }, {
@@ -32,12 +31,16 @@ const fetchingSpp = async (url, port) => {
 
   if (!isNaN(nmid)) {
     try {
-      const request = await fetch('http://37.230.113.58:9003/spp?' + new URLSearchParams({ nmid }))
-      const response = await request.json()
+      const response = await fetch('http://37.230.113.58:9003/spp?' + new URLSearchParams({ nmid }))
+      const responseJson = await response.json()
       const currentNmid = url_cache.split('/')[2]
-      if (currentNmid == nmid) {
-      port.postMessage({ name: 'fetched', response })
+      if (response.status !== 401) {
+        if (currentNmid == nmid) {
+          port.postMessage({ name: 'fetched', response: responseJson })
         }
+      } else {
+        port.postMessage({ name: 'unauthorized' })
+      }
     } catch (error) {
       console.error(error);
     }
@@ -51,6 +54,7 @@ const connectionHandler = (listEvent) => {
   port.postMessage({ name: operation__scrapy_main })
 
   port.onMessage.addListener(function (msg) {
+    console.log(msg)
     if (msg === 'start_fetching') {
       fetchingSpp(listEvent.url, port)
     }

@@ -13,6 +13,16 @@
             "css": ["styles.css"]
         }
     ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "images/*"
+            ],
+            "matches": [
+                "https://*/*"
+            ]
+        }
+    ],
     "permissions": [
         "webNavigation"
     ]

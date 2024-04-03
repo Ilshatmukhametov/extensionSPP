@@ -5,101 +5,52 @@ chrome.runtime.onConnect.addListener(function(port) {
       case 'scrapy_main':
         scrapy_main(port, msg)
         break
-      case 'fetched': {
-        fetched(port, msg, 0)
+      case 'unauthorized':
+        unauthorizedUser()
         break
-      }
+      case 'fetched':
+        fetched(port, msg)
+        break
     }
   })
 })
 const scrapy_main = (port) => {
-  const head = document.getElementsByClassName('price-block__content')
+  const head = document.getElementsByClassName('product-page__aside-sticky')
 
-  if (head[0] !== null) {
-    port.postMessage('start_fetching')
-    isLoadingFunc(0, port)
+  if (head.length === 0) {
+    setTimeout(() => scrapy_main(port), 100)
   } else {
-    port.postMessage('error')
-    setTimeout(() => scrapy_main(port),100)
+    removeExistingComponent(port)
   }
 }
 
 
-const isLoadingFunc = (attempts,port) => {
-  const head = document.getElementsByClassName('price-block__content')
-  const soldOutCon = document.getElementsByClassName('sold-out-product')
-  const priceBlockAside = document.getElementsByClassName('product-page__price-block--aside')
+const renderSppWidget = (port) => {
+  const head = document.getElementsByClassName('product-page__aside-sticky')
 
+  const widget = document.createElement('div')
+  widget.className = 'sppExtensionWidget'
 
-  Object.keys(priceBlockAside).forEach(el => {
-    priceBlockAside[el].style.cssText = 'max-width: 100%;'
-  })
-
-  if (attempts < 5) {
-    if (head[0] == null) {
-      setTimeout(() => isLoadingFunc(attempts + 1, port), 200)
-    } else {
-      sceletonComponentRender(head)
-    }
-  } else {
-    if (soldOutCon[0] == null) {
-      return false
-    } else {
-      sceletonComponentRender(soldOutCon)
-    }
-  }
+  head[0].insertBefore(widget, document.getElementsByClassName('product-page__aside-container')[0])
+  sceletonComponentRender(port)
 }
 
-const fetched = (port, msg, attempts) => {
-  const head = document.getElementsByClassName('price-block__content')
-  const soldOutCon = document.getElementsByClassName('sold-out-product')
-
-  if (attempts < 5) {
-    port.postMessage(attempts)
-    if (head[0] == null) {
-      port.postMessage('Не найдены компоненты, ищу заново')
-      setTimeout(() => fetched(port, msg, attempts + 1), 200)
-    } else {
-      renderWidget(head, msg, port)
-    }
-  } else {
-    if (soldOutCon[0] == null) {
-      port.postMessage('errors')
-    } else {
-      renderWidget(soldOutCon, msg, port)
-    }
-  }
+const fetched = (port, msg) => {
+  const mainDiv = document.getElementsByClassName('sppExtensionWidget')
+  renderWidget(mainDiv, msg)
 }
-const renderWidget = (head, msg, port) => {
+const renderWidget = (head, msg) => {
   const existingSceleton = document.getElementsByClassName('sppSceleton')
-  const existingComponent = document.getElementsByClassName('sppWidget')
 
-  if (existingSceleton[0] !== null) {
-    Object.keys(existingSceleton).forEach(el => {
-      existingSceleton[el].style.cssText = 'display: none;'
-    })
-  }
-  if (existingComponent[0] !== null) {
-    Object.keys(existingComponent).forEach(el => {
-      existingComponent[el].remove()
-    })
-  }
+  existingSceleton[0].remove()
 
-  Object.keys(head).forEach(el => {
-    const adjacentHTML =
-      `<div class="sppWidget">
-            ${sppComponentRender(msg.response.product)}
-            ${minMaxComponentRender(msg.response.ranges)}
-      </div>`
+  const adjacentHTML =
+    `<div class="sppWidget">
+          ${sppComponentRender(msg.response.product)}
+          ${minMaxComponentRender(msg.response.ranges)}
+    </div>`
 
-    head[el].insertAdjacentHTML('beforeend', adjacentHTML)
-    //
-    // if (sceleton[0] !== null) {
-    //   Object.keys(sceleton).forEach(el => {
-    //     sceleton[el].style.cssText = 'display: none;'
-    //   })
-    // }
-  })
+  head[0].insertAdjacentHTML('beforeend', adjacentHTML)
 }
 
 
@@ -152,32 +103,60 @@ const minMaxComponentRender = (ranges) => {
   return innerHtml
 }
 
-const sceletonComponentRender = (head) => {
+const sceletonComponentRender = (port) => {
+  const mainDiv = document.getElementsByClassName('sppExtensionWidget')
+  port.postMessage('start_fetching')
 
-  Object.keys(head).forEach(el => {
-    const adjacentHTML =
-      '<div class="sppSceleton">' +
-        '<div class="flexRow">' +
-          '<div class="pulsate1"></div>' +
-          '<div class="pulsate2"></div>' +
-        '</div>' +
-        '<div class="pulsate3"></div>' +
-        '<div class="flexRow">' +
-          '<div class="pulsate4"></div>' +
-          '<div class="pulsate5"></div>' +
-        '</div>' +
-        '<div class="flexRow">' +
-          '<div class="pulsate6"></div>' +
-          '<div class="pulsate7"></div>' +
-        '</div>' +
-      '</div>'
+  const adjacentHTML =
+    '<div class="sppSceleton">' +
+      '<div class="flexRow">' +
+        '<div class="pulsate1"></div>' +
+        '<div class="pulsate2"></div>' +
+      '</div>' +
+      '<div class="pulsate3"></div>' +
+      '<div class="flexRow">' +
+        '<div class="pulsate4"></div>' +
+        '<div class="pulsate5"></div>' +
+      '</div>' +
+      '<div class="flexRow">' +
+        '<div class="pulsate6"></div>' +
+        '<div class="pulsate7"></div>' +
+      '</div>' +
+    '</div>'
 
-    head[el].insertAdjacentHTML('beforeend', adjacentHTML)
-    //
-    // if (sceleton[0] !== null) {
-    //   Object.keys(sceleton).forEach(el => {
-    //     sceleton[el].style.cssText = 'display: none;'
-    //   })
-    // }
-  })
+  mainDiv[0].insertAdjacentHTML('beforeend', adjacentHTML)
+}
+
+const unauthorizedUser = () => {
+  renderAuthComponent()
+}
+
+const renderAuthComponent = () => {
+  const sppWidget = document.getElementsByClassName('sppExtensionWidget')
+  const existingSceleton = document.getElementsByClassName('sppSceleton')
+  const urlLink = document.createElement('a')
+  urlLink.target = '_blank'
+  urlLink.rel = 'noreferrer'
+  urlLink.href = 'https://sad-poets-hunt.loca.lt'
+
+  const authImage = document.createElement('img');
+  authImage.src = chrome.runtime.getURL("images/authImage.svg");
+
+  existingSceleton[0].remove()
+
+  urlLink.appendChild(authImage)
+  sppWidget[0].appendChild(urlLink)
+
+}
+
+const removeExistingComponent = (port) => {
+  const existingDiv = document.getElementsByClassName('sppExtensionWidget')
+
+  if (existingDiv.length !== 0) {
+    Object.keys(existingDiv).forEach(el => {
+      existingDiv[el].remove()
+    })
+  }
+
+  renderSppWidget(port)
 }
