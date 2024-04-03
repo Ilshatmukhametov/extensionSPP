@@ -160,3 +160,4 @@ const removeExistingComponent = (port) => {
 
   renderSppWidget(port)
 }
+
