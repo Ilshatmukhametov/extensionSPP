@@ -31,7 +31,7 @@ const fetchingSpp = async (url, port) => {
 
   if (!isNaN(nmid)) {
     try {
-      const response = await fetch('http://37.230.113.58:9003/spp?' + new URLSearchParams({ nmid }))
+      const response = await fetch('https://wbspp.oiseller.ru/spp?' + new URLSearchParams({ nmid }))
       const responseJson = await response.json()
       const currentNmid = url_cache.split('/')[2]
       if (response.status !== 401) {

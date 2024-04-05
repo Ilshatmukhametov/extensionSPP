@@ -137,7 +137,7 @@ const renderAuthComponent = () => {
   const urlLink = document.createElement('a')
   urlLink.target = '_blank'
   urlLink.rel = 'noreferrer'
-  urlLink.href = 'https://sad-poets-hunt.loca.lt'
+  urlLink.href = 'https://wbspp.oiseller.ru'
 
   const authImage = document.createElement('img');
   authImage.src = chrome.runtime.getURL("images/authImage.svg");
