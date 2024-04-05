@@ -48,13 +48,10 @@ const fetchingSpp = async (url, port) => {
 }
 
 const connectionHandler = (listEvent) => {
-  console.log('creating connection')
-
   let port = chrome.tabs.connect(listEvent.tabId)
   port.postMessage({ name: operation__scrapy_main })
 
   port.onMessage.addListener(function (msg) {
-    console.log(msg)
     if (msg === 'start_fetching') {
       fetchingSpp(listEvent.url, port)
     }

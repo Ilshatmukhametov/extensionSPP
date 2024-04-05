@@ -135,8 +135,7 @@ const renderAuthComponent = () => {
   const sppWidget = document.getElementsByClassName('sppExtensionWidget')
   const existingSceleton = document.getElementsByClassName('sppSceleton')
   const urlLink = document.createElement('a')
-  urlLink.target = '_blank'
-  urlLink.rel = 'noreferrer'
+  urlLink.target = '_parent'
   urlLink.href = 'https://wbspp.oiseller.ru'
 
   const authImage = document.createElement('img');
